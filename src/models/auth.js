@@ -22,7 +22,7 @@ userSchema.methods.encryptPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
   return bcrypt.hash(password, salt);
 };
-userSchema.methods.comparePassword = async function () {
-  return bcrypt.compare(password, this.password);
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
 };
 module.exports = model('User', userSchema);

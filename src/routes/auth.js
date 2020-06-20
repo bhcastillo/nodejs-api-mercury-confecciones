@@ -1,8 +1,8 @@
 const User = require('../models/auth');
 const jwt = require('jsonwebtoken');
-
+const {required} = require('@hapi/joi');
+const {signInValidation, signUpValidation, errorMessage} = require('../libs/joi');
 const signUp = async (req, res) => {
-  //try {
   //receiving Data
   const {username, email, password} = req.body;
   if (!password)
@@ -16,7 +16,7 @@ const signUp = async (req, res) => {
     password,
   });
   user.password = await user.encryptPassword(password);
-
+  // saving a new user
   await user.save((err, data) => {
     if (err) {
       res.status(500).send({
@@ -29,7 +29,7 @@ const signUp = async (req, res) => {
         const token = jwt.sign({id: user.id}, process.env.TOKEN_SECRET, {
           expiresIn: 60 * 60 * 24,
         });
-        res.status(200).json({id, username, email, token});
+        res.status(201).json({id, username, email, token});
       } else {
         res.status(404).send({
           message: `No existen datos en el API con tus parámetros de búsqueda.`,
@@ -37,16 +37,23 @@ const signUp = async (req, res) => {
       }
     }
   });
-
-  // } catch (error) {
-  //   res.status(500).json({
-  //     message: 'there was a problem registering your user',
-  //     error: error.message,
-  //   });
-  // }
 };
 
-const signIn = async (req, res) => {};
+const signIn = async (req, res) => {
+  const {error} = signInValidation(req.body);
+  if (error) {
+    return errorMessage(req, res, error);
+  }
+  const {email, password} = req.body;
+  const user = await User.findOne({email});
+  if (!user) return res.status(404).json({error: "The email doesn't exists"});
+  const validPassword = await user.comparePassword(password, user.password);
+  if (!validPassword) {
+    return res.status(401).json({error: 'Invalid password'});
+  }
+  const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
+  res.header('x-access-token', token).json({token});
+};
 module.exports = {
   signUp,
   signIn,
