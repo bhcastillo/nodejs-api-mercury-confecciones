@@ -1,5 +1,5 @@
 const express = require('express'),
-  config = require('./config'),
+  morgan = require('morgan'),
   app = express(),
   router = require('./router');
 
@@ -17,6 +17,7 @@ app
     res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     next();
   })
+  .use(morgan('dev'))
   .use('/api', router);
 
 module.exports = app;
