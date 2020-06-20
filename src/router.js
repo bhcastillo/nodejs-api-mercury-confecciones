@@ -1,5 +1,6 @@
 const express = require('express'),
   Product = require('./routes/product'),
+  Auth = require('./routes/auth'),
   api = express.Router();
 
 api.get('/', async (req, res) => {
@@ -7,6 +8,10 @@ api.get('/', async (req, res) => {
     message: 'API confecciones mercury Funcionando',
   });
 });
+// routes Auth
+api.post('/signup', Auth.signUp);
+api.post('/signin', Auth.signIn);
+// routes Products
 api.get('/product/:_id', Product.getProduct);
 api.get('/products', Product.getProducts);
 api.post('/product/', Product.postProduct);
