@@ -1,6 +1,9 @@
+const TokenValidation = require('./libs/verifyToken');
+
 const express = require('express'),
   Product = require('./routes/product'),
   Auth = require('./routes/auth'),
+  tokenValidation = require('./libs/verifyToken'),
   api = express.Router();
 
 api.get('/', async (req, res) => {
@@ -13,7 +16,7 @@ api.post('/signup', Auth.signUp);
 api.post('/signin', Auth.signIn);
 // routes Products
 api.get('/product/:_id', Product.getProduct);
-api.get('/products', Product.getProducts);
+api.get('/products', tokenValidation, Product.getProducts);
 api.post('/product/', Product.postProduct);
 api.put('/product/:_id', Product.putProduct);
 api.delete('/product/:_id', Product.deleteProduct);

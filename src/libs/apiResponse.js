@@ -13,3 +13,5 @@ const apiResponse = (req, res, err, data) => {
     }
   }
 };
+
+module.exports = apiResponse;
