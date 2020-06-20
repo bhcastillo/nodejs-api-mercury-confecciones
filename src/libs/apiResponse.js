@@ -1,7 +1,7 @@
 const apiResponse = (req, res, err, data) => {
   if (err) {
-    res.status(500).send({
-      message: `Error interno del servidor: ${err.message}`,
+    res.status(500).json({
+      error: err.message,
     });
   } else {
     if (data) {

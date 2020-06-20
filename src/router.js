@@ -12,7 +12,7 @@ api.get('/', async (req, res) => {
   });
 });
 // routes Auth
-api.post('/signup', tokenValidation, Auth.signUp);
+api.post('/signup', Auth.signUp);
 api.post('/signin', Auth.signIn);
 // routes Products
 api.get('/product/:_id', Product.getProduct);
