@@ -7,7 +7,14 @@ const signInValidation = (data) => {
   });
   return userSchema.validate(data);
 };
-const signUpValidation = (data) => {};
+const signUpValidation = (data) => {
+  const userSchema = Joi.object({
+    email: Joi.string().email().required(),
+    username: Joi.string().min(8).required(),
+    password: Joi.string().min(8).required(),
+  });
+  return userSchema.validate(data);
+};
 
 const errorMessage = (req, res, error) => {
   let messageError = error.message.slice(error.details[0].context.key.length + 2);

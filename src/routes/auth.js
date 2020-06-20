@@ -2,13 +2,15 @@ const User = require('../models/auth');
 const jwt = require('jsonwebtoken');
 const {required} = require('@hapi/joi');
 const {signInValidation, signUpValidation, errorMessage} = require('../libs/joi');
+
 const signUp = async (req, res) => {
+  //validate data
+  const {error} = signUpValidation(req.body);
+  if (error) {
+    return errorMessage(req, res, error);
+  }
   //receiving Data
   const {username, email, password} = req.body;
-  if (!password)
-    res
-      .status(500)
-      .json({error: 'User validation failed:Password: password is requerid'});
   // creating a new User
   const user = new User({
     username,
@@ -40,6 +42,7 @@ const signUp = async (req, res) => {
 };
 
 const signIn = async (req, res) => {
+  //validate data
   const {error} = signInValidation(req.body);
   if (error) {
     return errorMessage(req, res, error);

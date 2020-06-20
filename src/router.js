@@ -12,13 +12,13 @@ api.get('/', async (req, res) => {
   });
 });
 // routes Auth
-api.post('/signup', Auth.signUp);
+api.post('/signup', tokenValidation, Auth.signUp);
 api.post('/signin', Auth.signIn);
 // routes Products
 api.get('/product/:_id', Product.getProduct);
-api.get('/products', tokenValidation, Product.getProducts);
-api.post('/product/', Product.postProduct);
-api.put('/product/:_id', Product.putProduct);
-api.delete('/product/:_id', Product.deleteProduct);
+api.get('/products', Product.getProducts);
+api.post('/product/', tokenValidation, Product.postProduct);
+api.put('/product/:_id', tokenValidation, Product.putProduct);
+api.delete('/product/:_id', tokenValidation, Product.deleteProduct);
 api.get('*', Product.notFound);
 module.exports = api;
